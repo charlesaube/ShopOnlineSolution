@@ -1,0 +1,26 @@
+﻿
+@inject NavigationManager NavigationManager
+
+  <div class="input-group m-4">
+           <input type="search" id="form1" @bind-value='SearchQuery' class="form-control" placeholder="Search Products..." /> 
+    <button @onclick="Search" type="button" class="btn">
+    <i class="fas fa-search"></i>
+  </button>
+  </div>
+  
+
+@code {
+
+    private string SearchQuery { get; set; }
+
+
+    private void Search()
+    {
+        if (SearchQuery != null || SearchQuery != " ")
+        {
+            NavigationManager.NavigateTo("/ProductsByKeyword/" + SearchQuery);
+            SearchQuery = null;
+        }
+    }
+
+}

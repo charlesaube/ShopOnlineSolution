@@ -1,0 +1,61 @@
+﻿@page "/ShoppingCart"
+@inherits ShoppingCartBase
+<AuthorizeView>
+    <NotAuthorized>
+        <DisplayError ErrorMessage="You must be connected to view your shopping cart."></DisplayError>
+    </NotAuthorized>
+
+    <Authorized> 
+    @if(ShoppingCartItems == null && ErrorMessage == null){
+        <DisplaySpinner/>
+    }
+    else if(ErrorMessage != null){
+        <DisplayError ErrorMessage="@ErrorMessage"></DisplayError>
+    }
+    else{
+        <h3 class="mb-5">Shopping Cart</h3>
+         <div class="row mb-5">
+             @if(ShoppingCartItems.Count > 0)
+             {
+                <div class="col-md-9">  
+                    @foreach (var item in ShoppingCartItems)
+                    {
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                               <img src="@item.ProductImageURL" width="300" class="img-thumbnail">
+                           </div> 
+                           <div class="col-md-8">
+                               <h5><a href="/ProductDetails/@item.ProductId" >@item.ProductName</a></h5>
+                               <div class="mb-4">@item.ProductDescription</div>          
+                               <span>Price: <b>@item.Price.ToString("C")</b></span>
+                               <div>
+                                   Quantity:<input type="number"  min="1" value="@item.Qty"  @onchange="OnQtyInputEvent"  @onfocusout="() => UpdateItemQty_OnChanged(item,ChangedQty)" />
+                                   <button class="btn btn-danger oi oi-trash" @onclick=" () => DeleteItem_OnClick(item.Id)"></button>
+                               </div>
+                               <span>Total Price: <b>@item.TotalPrice.ToString("C")</b></span>
+                          
+                       
+                           </div>
+                        </div>
+                       <hr class="mb-3"/>
+
+                    }
+                </div>
+                <div class="col-md-3">
+                    <h5>Cart Summary</h5>
+                    <div class="mt-2">
+                        <div>Total - (@TotalQuantity items)&nbsp;<b>@TotalPrice</b></div>
+                        <a href="Checkout" class="btn btn-success">
+                            <span class="oi oi-credit-card"></span>&nbsp; Proceed to Checkout
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+               <h4>There is no items in your shopping cart</h4> 
+            }
+        </div>
+    }
+    </Authorized>
+</AuthorizeView>

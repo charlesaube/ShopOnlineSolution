@@ -1,0 +1,31 @@
+﻿@implements IDisposable
+@inject IShoppingCartService shoppingCartService
+@inject NavigationManager navManager
+
+
+<button class="nav-item m-1 text-center cart-btn" @onclick='()=> navManager.NavigateTo("/ShoppingCart")'>
+    <div class="row-cols-1" >
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>Cart <span class="badge bg-dark">@shoppingCartItemCount</span></span>     
+    </div>
+</button>
+
+
+@code {
+    private int shoppingCartItemCount = 0;
+    protected override void OnInitialized()
+    {
+        shoppingCartService.OnShoppingCartChanged += ShoppingCartChanged;
+    }
+
+    protected void ShoppingCartChanged(int totalQty)
+    {
+        shoppingCartItemCount = totalQty;
+        StateHasChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        shoppingCartService.OnShoppingCartChanged -= ShoppingCartChanged;
+    }
+}
