@@ -1,0 +1,19 @@
+﻿@page "/ProductsByKeyword/{SearchQuery}"
+@inherits ProductsBySearchBase
+
+<h3>Search Results: @SearchQuery</h3>
+@if(Products == null && ErrorMessage == null)
+{
+    <DisplaySpinner/>
+}
+else if(ErrorMessage != null)
+{
+    <DisplayError ErrorMessage="@ErrorMessage"/>
+}
+else
+{
+    <div class="row mt-3">
+        <DisplayProducts Products="@Products"/>
+    </div>
+}
+

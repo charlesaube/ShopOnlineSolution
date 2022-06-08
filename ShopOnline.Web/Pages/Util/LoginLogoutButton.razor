@@ -1,0 +1,37 @@
+﻿@inject NavigationManager NavigationManager
+@inject IManageUserLocalStorageService userLocalStorage
+@inject IManageCartItemsLocalStorageService cartItemsLocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+
+<AuthorizeView>
+    <Authorized>
+         <button class="nav-item m-1 text-center logout" @onclick="Logout">
+            <div class="row-cols-1">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </div>
+        </button>
+    </Authorized>
+    <NotAuthorized>
+        <button class="nav-item m-1  text-center login" @onclick="Login">
+            <div class="row-cols-1">
+                <i class="fa-regular fa-user"></i>
+                <span>Login</span>
+            </div>
+        </button>
+         
+    </NotAuthorized>
+</AuthorizeView>
+@code {
+    void Login()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+
+    async Task Logout()
+    {
+        await userLocalStorage.RemoveCollection();
+        await cartItemsLocalStorage.RemoveCollection();
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+}

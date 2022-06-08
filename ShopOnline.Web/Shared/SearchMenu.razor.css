@@ -1,0 +1,12 @@
+﻿
+.btn{
+    background-color:white;
+    color:black;
+}
+button:hover {
+    background-color: #ff6219;
+    color:white;
+}
+input:focus {
+    border: 2px solid #ff6219;
+}

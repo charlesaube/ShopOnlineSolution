@@ -1,0 +1,68 @@
+﻿@page "/login"
+@inherits LoginBase
+
+@*
+<h3>Login</h3>
+<EditForm Model="userLogin" OnSubmit="OnLogin">
+    <label for="loginIdentifier">Username or Email</label>
+    <InputText id="loginIdentifier" @bind-Value="userLogin.LoginIdentifier"/>
+    <label for="password">Password</label>
+    <InputText type="password" id="password" @bind-Value="userLogin.Password"/>
+    <button type="submit">Login</button>
+
+</EditForm>
+*@
+
+
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col col-xl-10">
+        <div class="card" style="border-radius: 1rem;background-image: linear-gradient(#000066, #3a0647);">
+          <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block">
+              <img src="/Images/loginImage.png"
+                alt="login form" class="img-fluid m-3" style="border-radius: 1rem 0 0 1rem;" />
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <div class="card-body p-4 p-lg-5 text-white">
+
+                <form Model="userLogin">
+
+                  <div class="d-flex align-items-center mb-3 pb-1">
+                    <i class="fas fa-shopping-cart fa-2x me-3" style="color: #ff6219;"></i>
+                    <span class="h1 fw-bold mb-0">ShopOnline</span>
+                  </div>
+
+                  <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign in</h5>
+                  @if (ErrorMessage != null)
+                  {
+                     <h6 class="text-danger">* @ErrorMessage</h6>
+                  }
+                  
+                  <div class="form-outline mb-4">
+                    <input placeholder="Username or Email" type="email" @bind-value="userLogin.LoginIdentifier" id="loginIdentifier" class="form-control form-control-lg" />   
+                  </div>
+
+                  <div class="form-outline mb-4">
+                    <input placeholder="Password" type="password" @bind-value="userLogin.Password" id="password" class="form-control form-control-lg" />        
+                  </div>
+
+                  <div class="pt-1 mb-4">
+                    <button class="login btn btn-light btn-lg btn-block" type="button" @onclick="OnLogin">Login</button>
+                  </div>
+
+                  <a class="small text-muted" href="#!">Forgot password?</a>
+                  <p class="mb-5 pb-lg-2" style="color: white;">Don't have an account? <a href="#!"
+                      style="color: #ff6219;">Register here</a></p>
+                  <a href="#!" class="small text-muted">Terms of use.</a>
+                  <a href="#!" class="small text-muted">Privacy policy</a>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
