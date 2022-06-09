@@ -36,7 +36,7 @@ namespace ShopOnline.Api.Repositories
 
         public async Task<User> GetUserByLoginIdentifier(string loginIdentifier)
         {
-            return await shopOnlineDbContext.Users.FirstOrDefaultAsync(e => e.Email == loginIdentifier || e.UserName == loginIdentifier);  
+            return await shopOnlineDbContext.Users.FirstOrDefaultAsync(e => EF.Functions.Collate(e.Email, "SQL_Latin1_General_CP1_CS_AS") == loginIdentifier || EF.Functions.Collate(e.UserName, "SQL_Latin1_General_CP1_CS_AS") == loginIdentifier);  
         }
 
         public async Task<User> GetUserById(int userId)

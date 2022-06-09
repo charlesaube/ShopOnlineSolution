@@ -10,7 +10,6 @@ namespace ShopOnline.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class ProductController : ControllerBase
     {
         private readonly IProductService productService;
@@ -20,7 +19,7 @@ namespace ShopOnline.Api.Controllers
             this.productService = productService;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}"),AllowAnonymous]
         public async Task<ActionResult<ProductDto>> GetItem(int id)
         {
             try
@@ -44,7 +43,7 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetItems()
         {
             try
@@ -69,7 +68,7 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        [HttpGet("Categories")]
+        [HttpGet("Categories"), AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProductCategoryDto>>> GetProductCategories()
         {
             try
@@ -86,7 +85,7 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("ByCategory/{categoryId}")]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetItemsByCategory(int categoryId)
         {
@@ -104,7 +103,7 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("ByKeyword/{keywords}")]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetItemsByKeyword(string keywords)
         {
@@ -130,7 +129,7 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin,Seller")]
         [HttpPost]
         [Route("Create")]
         public async Task<ActionResult<ProductDto>> CreateItem([FromBody]ProductDto productDto)

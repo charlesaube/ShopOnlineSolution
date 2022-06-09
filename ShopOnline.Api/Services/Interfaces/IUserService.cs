@@ -14,5 +14,7 @@ namespace ShopOnline.Api.Services.Interfaces
         Task<User> Register(UserRegistrationDto registrationRequest);
 
         Task<User> Authenticate(UserLoginDto userLoginDto);
+
+        string GenerateToken(User user);
     }
 }

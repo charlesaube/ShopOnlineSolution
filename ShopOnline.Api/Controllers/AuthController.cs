@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using ShopOnline.Api.Entities;
 using ShopOnline.Api.Extensions;
 using ShopOnline.Api.Services.Interfaces;
 using ShopOnline.Models.Dtos.User;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+
 
 namespace ShopOnline.Api.Controllers
 {
@@ -54,49 +50,28 @@ namespace ShopOnline.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] UserLoginDto userLoginDto)
+        public async Task<ActionResult<UserDto>> Login([FromBody] UserLoginDto userLoginDto)
         {
             try
             {
+
                 var currentUser = await userService.Authenticate(userLoginDto);
-      
-                if (currentUser != null)
-                {             
+                if(currentUser != null)
+                {
                     var cartId = await shoppingCartService.GetCartId(currentUser.Id);
-                    var token = GenerateToken(currentUser);
-                    var userLoginResponse = currentUser.ConvertToDto(cartId,token);
-                    return Ok(userLoginResponse);           
+                    var token = userService.GenerateToken(currentUser);
+                    var userLoginResponse = currentUser.ConvertToDto(cartId, token);
+                    return Ok(userLoginResponse);
                 }
-                return NotFound("Incorrect login.");
+
+                return BadRequest("Incorrect login.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
-        private string GenerateToken(User user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim("UserId", user.Id.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.FullName),
-            };
-
-            var token = new JwtSecurityToken(config["Jwt:Issuer"],
-                config["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(120),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-            
-        }
 
         /*
         [AllowAnonymous]
