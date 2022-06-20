@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopOnline.Api.Extensions;
-using ShopOnline.Api.Repositories.Interfaces;
-using ShopOnline.Api.Services.Interfaces;
+using ShopOnline.Api.Services.Products;
 using ShopOnline.Models.Dtos;
 
 namespace ShopOnline.Api.Controllers
@@ -12,11 +10,11 @@ namespace ShopOnline.Api.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IProductService productService;
+        private readonly IProductService _productService;
 
         public ProductController(IProductService productService)
         {
-            this.productService = productService;
+            this._productService = productService;
         }
 
         [HttpGet("{id:int}"),AllowAnonymous]
@@ -24,7 +22,7 @@ namespace ShopOnline.Api.Controllers
         {
             try
             {
-                var product = await this.productService.GetItem(id);             
+                var product = await this._productService.GetItem(id);             
 
                 if (product == null )
                 {
@@ -48,7 +46,7 @@ namespace ShopOnline.Api.Controllers
         {
             try
             {
-                var products = await this.productService.GetItems();
+                var products = await this._productService.GetItems();
 
                 if (products == null)
                 {
@@ -73,7 +71,7 @@ namespace ShopOnline.Api.Controllers
         {
             try
             {
-                var productCategories = await productService.GetCategories();
+                var productCategories = await _productService.GetCategories();
                 var productCategoriesDto = productCategories.ConvertToDto();
                 return Ok(productCategoriesDto);
             }
@@ -91,7 +89,7 @@ namespace ShopOnline.Api.Controllers
         {
             try
             {
-                var products = await productService.GetItemsByCategory(categoryId);
+                var products = await _productService.GetItemsByCategory(categoryId);
                 var productsDto = products.ConvertToDto();
                 return Ok(productsDto);
             }
@@ -109,7 +107,7 @@ namespace ShopOnline.Api.Controllers
         {
             try
             {
-                var products = await productService.GetItemsByKeywords(keywords);
+                var products = await _productService.GetItemsByKeywords(keywords);
 
                 if (!products.Any())
                 {
@@ -140,7 +138,7 @@ namespace ShopOnline.Api.Controllers
                 {
                     var product = productDto.ConvertFromDto();
                 
-                    var createdProduct = await productService.CreateItem(product);
+                    var createdProduct = await _productService.CreateItem(product);
                     var newProductDto = createdProduct.ConvertToDto();
                     return CreatedAtAction(nameof(CreateItem), new { id = createdProduct.Id }, newProductDto);
                 }

@@ -1,6 +1,6 @@
 ﻿using ShopOnline.Api.Entities;
 
-namespace ShopOnline.Api.Services.Interfaces
+namespace ShopOnline.Api.Services.Products
 {
     public interface IProductService
     {

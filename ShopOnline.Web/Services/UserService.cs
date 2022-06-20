@@ -12,7 +12,7 @@ namespace ShopOnline.Web.Services
         {
             this.httpClient = httpClient;
         }
-        public async Task<UserDto> Login(UserLoginDto userLoginDto)
+        public async Task<UserResponseDto> Login(UserLoginDto userLoginDto)
         {
             try
             {
@@ -22,10 +22,10 @@ namespace ShopOnline.Web.Services
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     {
-                        return default(UserDto);
+                        return default(UserResponseDto);
                     }
 
-                    return await response.Content.ReadFromJsonAsync<UserDto>();
+                    return await response.Content.ReadFromJsonAsync<UserResponseDto>();
                 }
                 else
                 {

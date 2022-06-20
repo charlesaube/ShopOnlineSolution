@@ -1,7 +1,7 @@
 ﻿using ShopOnline.Api.Entities;
 using ShopOnline.Models.Dtos;
 
-namespace ShopOnline.Api.Services.Interfaces
+namespace ShopOnline.Api.Services.ShoppingCart
 {
     public interface IShoppingCartService
     {

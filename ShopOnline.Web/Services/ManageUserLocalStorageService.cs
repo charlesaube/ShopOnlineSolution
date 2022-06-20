@@ -16,9 +16,9 @@ namespace ShopOnline.Web.Services
             this.localStorageService = localStorageService;
 
         }
-        public async Task<UserDto> GetCollection()
+        public async Task<UserResponseDto> GetCollection()
         {
-            return await this.localStorageService.GetItemAsync<UserDto>(key);          
+            return await this.localStorageService.GetItemAsync<UserResponseDto>(key);          
         }
 
         public async Task RemoveCollection()
@@ -26,14 +26,14 @@ namespace ShopOnline.Web.Services
             await this.localStorageService.RemoveItemAsync(key);
         }
 
-        public async Task SaveCollection(UserDto userDto)
+        public async Task SaveCollection(UserResponseDto userDto)
         {
             await this.localStorageService.SetItemAsync(key, userDto);
         }
 
         public async Task<string> GetToken()
         {
-           var user = await this.localStorageService.GetItemAsync<UserDto>(key); 
+           var user = await this.localStorageService.GetItemAsync<UserResponseDto>(key); 
            if(user != null)
             {
                 return user.JwtToken;
@@ -43,7 +43,7 @@ namespace ShopOnline.Web.Services
 
         public async Task<int> GetId()
         {
-            var user = await this.localStorageService.GetItemAsync<UserDto>(key);
+            var user = await this.localStorageService.GetItemAsync<UserResponseDto>(key);
             if (user != null)
             {
                 return user.Id;
@@ -53,7 +53,7 @@ namespace ShopOnline.Web.Services
 
         public async Task<int> GetCartId()
         {
-            var user = await this.localStorageService.GetItemAsync<UserDto>(key);
+            var user = await this.localStorageService.GetItemAsync<UserResponseDto>(key);
             if (user != null)
             {
                 return user.CartId;

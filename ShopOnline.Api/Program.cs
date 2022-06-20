@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using ShopOnline.Api.Authentication;
+using ShopOnline.Api.Authentication.Interfaces;
 using ShopOnline.Api.Data;
-using ShopOnline.Api.Extensions;
 using ShopOnline.Api.Repositories;
 using ShopOnline.Api.Repositories.Interfaces;
-using ShopOnline.Api.Services;
-using ShopOnline.Api.Services.Interfaces;
+using ShopOnline.Api.Services.Authentication;
+using ShopOnline.Api.Services.Products;
+using ShopOnline.Api.Services.ShoppingCart;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,11 +33,15 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 //Bussiness logic Service
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 // Password Hasser 
-builder.Services.AddScoped<ICustomPasswordHasher, CustomPasswordHasher>();
+builder.Services.AddSingleton<ICustomPasswordHasher, CustomPasswordHasher>();
+
 // JWT  Service
+builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -47,7 +53,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
         };
     });
 

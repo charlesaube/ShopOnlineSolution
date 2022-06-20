@@ -4,11 +4,11 @@ namespace ShopOnline.Web.Services.Interfaces
 {
     public interface IManageUserLocalStorageService
     {
-        Task<UserDto> GetCollection();
+        Task<UserResponseDto> GetCollection();
         Task<string> GetToken();
         Task<int> GetId();
         Task<int> GetCartId();
-        Task SaveCollection(UserDto userDto);
+        Task SaveCollection(UserResponseDto userDto);
         Task RemoveCollection();
     }
 }

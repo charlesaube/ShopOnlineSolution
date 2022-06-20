@@ -1,17 +1,12 @@
 ﻿using Microsoft.Extensions.Options;
-
+using ShopOnline.Api.Authentication.Interfaces;
 using System.Security.Cryptography;
 
-namespace ShopOnline.Api.Extensions
+namespace ShopOnline.Api.Authentication
 {
     public sealed class HashingOptions
     {
         public int Iterations { get; set; } = 10000;
-    }
-    public interface ICustomPasswordHasher
-    {
-        string Hash(string password);
-        (bool Verified, bool NeedsUpgrade) Check(string hash, string password);
     }
     public sealed class CustomPasswordHasher : ICustomPasswordHasher
     {

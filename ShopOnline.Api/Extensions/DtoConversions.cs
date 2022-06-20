@@ -1,4 +1,5 @@
 ﻿using ShopOnline.Api.Entities;
+using ShopOnline.Api.Services.Authentication;
 using ShopOnline.Models.Dtos;
 using ShopOnline.Models.Dtos.User;
 
@@ -98,17 +99,17 @@ namespace ShopOnline.Api.Extensions
             };
         }
 
-        public static UserDto ConvertToDto(this User user,int cartId,string token)
+        public static UserResponseDto ConvertToDto(this AuthenticationResult result,int cartId)
         {
-            return new UserDto
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                FullName = user.FullName,
-                Email = user.Email,
-                CartId= cartId,
-                JwtToken = token
-            };
+            return new UserResponseDto
+            (
+               result.User.Id,
+               result.User.UserName,
+               result.User.FullName,
+               result.User.Email,
+               cartId,
+               result.Token
+            );
         }
     }
 }

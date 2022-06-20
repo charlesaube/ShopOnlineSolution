@@ -1,8 +1,8 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopOnline.Api.Extensions;
-using ShopOnline.Api.Services.Interfaces;
+using ShopOnline.Api.Services.Products;
+using ShopOnline.Api.Services.ShoppingCart;
 using ShopOnline.Models.Dtos;
 using System.Security.Claims;
 
@@ -13,16 +13,14 @@ namespace ShopOnline.Api.Controllers
     [Authorize]
     public class ShoppingCartController : ControllerBase
     {
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IShoppingCartService shoppingCartService;
-        private readonly IProductService productService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IProductService _productService;
     
 
-        public ShoppingCartController(IAuthorizationService authorizationService,IShoppingCartService shoppingCartService,IProductService productService)
+        public ShoppingCartController(IShoppingCartService shoppingCartService,IProductService productService)
         {
-            this._authorizationService = authorizationService;
-            this.shoppingCartService = shoppingCartService;
-            this.productService = productService;
+            this._shoppingCartService = shoppingCartService;
+            this._productService = productService;
         }
 
         [HttpGet]
@@ -33,12 +31,12 @@ namespace ShopOnline.Api.Controllers
             {  
                 if(CheckUserIdentity(HttpContext,userId))
                 {   
-                    var cartItems = await shoppingCartService.GetItems(userId);
+                    var cartItems = await _shoppingCartService.GetItems(userId);
                     if(cartItems == null)
                     {
                         return NoContent();
                     }
-                    var products = await productService.GetItems();
+                    var products = await _productService.GetItems();
                     if (products == null)
                     {
                         throw new Exception("No products exist in the system");
@@ -79,12 +77,12 @@ namespace ShopOnline.Api.Controllers
                 {
                     return Unauthorized("User unauthorized to access the specified data");
                 }
-                var cartItem = await shoppingCartService.GetItem(id);
+                var cartItem = await _shoppingCartService.GetItem(id);
                 if (cartItem == null)
                 {
                     return NotFound();
                 }
-                var product =await productService.GetItem(cartItem.ProductId);
+                var product =await _productService.GetItem(cartItem.ProductId);
                 if (product == null)
                 {
                     return NotFound();
@@ -108,13 +106,13 @@ namespace ShopOnline.Api.Controllers
                 {
                     return Unauthorized("User unauthorize");
                 }
-                var newCartItem = await shoppingCartService.AddItem(cartItemToAddDto);
+                var newCartItem = await _shoppingCartService.AddItem(cartItemToAddDto);
 
                 if(newCartItem == null)
                 {
                     return NoContent();
                 }
-                var product = await productService.GetItem(newCartItem.ProductId);
+                var product = await _productService.GetItem(newCartItem.ProductId);
                 if (product == null)
                 {
                     throw new Exception($"Something went wrong when retrieving product (productId:{cartItemToAddDto.ProductId})");
@@ -138,12 +136,12 @@ namespace ShopOnline.Api.Controllers
                 {
                     return Unauthorized("User unauthorize");
                 }
-                var deletedCartItem = await shoppingCartService.DeleteItem(id);
+                var deletedCartItem = await _shoppingCartService.DeleteItem(id);
                 if (deletedCartItem == null)
                 {
                     return NotFound();
                 }
-                var product = await productService.GetItem(deletedCartItem.ProductId);
+                var product = await _productService.GetItem(deletedCartItem.ProductId);
                 if (product == null)
                 {
                     return NotFound();
@@ -167,12 +165,12 @@ namespace ShopOnline.Api.Controllers
                 {
                     return Unauthorized("User unauthorize");
                 }
-                var updatedCartItem = await shoppingCartService.UpdateQty(id, cartItemQtyUpdate);
+                var updatedCartItem = await _shoppingCartService.UpdateQty(id, cartItemQtyUpdate);
                 if(updatedCartItem == null)
                 {
                     return NotFound();
                 }
-                var product = await productService.GetItem(updatedCartItem.ProductId);
+                var product = await _productService.GetItem(updatedCartItem.ProductId);
                 if(product == null)
                 {
                     return NotFound();

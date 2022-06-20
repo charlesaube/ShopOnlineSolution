@@ -16,19 +16,16 @@ namespace ShopOnline.Web.Pages
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
-        public UserLoginDto userLogin { get; set; }
+        public string loginIdentifier { get; set; }
+        public string loginPassword { get; set; }
 
         public string ErrorMessage { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            userLogin = new UserLoginDto();
-        }
 
         public async Task OnLogin()
         {
             try
             {
+                var userLogin = new UserLoginDto(loginIdentifier, loginPassword);
                 var user = await userService.Login(userLogin);
                 if (user != null)
                 {
